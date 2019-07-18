@@ -1,0 +1,8 @@
+
+=form_with model: @tasklist,url: {action: "create"},local: true do |form|
+  -if @tasklist.errors.any?
+    -@tasklist.errors.full_messages.each do |error|
+      = error
+  =form.label :name
+  =form.text_field :name
+  =form.submit

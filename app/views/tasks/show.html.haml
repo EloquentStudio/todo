@@ -1,0 +1,9 @@
+%h1 #{@tasks.name}
+%h4 #{@tasks.body}
+Status: #{@tasks.status}
+%br
+%br
+Tasklist: #{@tasks.tasklist.name}
+%br
+%br
+=link_to 'Back', tasklist_tasks_path

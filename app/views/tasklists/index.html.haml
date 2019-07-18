@@ -1,0 +1,14 @@
+%h2 Hello #{current_user.email}
+%br
+- if @tasklist.length
+  %h3 You have #{@tasklist.length} tasklist
+  -@tasklist.each do |tasklist|
+    =link_to tasklist.name, tasklist_tasks_path(tasklist.id)
+    %br
+
+  %br
+
+=link_to 'Create new tasklist', new_tasklist_path
+
+%br
+=link_to 'Sign Out',destroy_user_session_path,method: :delete if user_signed_in?
