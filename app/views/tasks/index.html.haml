@@ -1,5 +1,5 @@
 .container
-  %h1{:class =>"text-center"}Hello, You have #{@tasks.count} tasks in #{Tasklist.find(params[:tasklist_id]).name}
+  %h1{:class =>"text-center"}Hello, You have #{@tasks.length} tasks
 .container{:class => "col-sm-6"}
   - @tasks.each do |task|
     .card{:style=>'margin-bottom:10px'}
