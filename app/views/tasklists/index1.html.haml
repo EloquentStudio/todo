@@ -1,0 +1,23 @@
+%nav.navbar.navbar-light.bg-warning
+  .container-fluid
+    .navbar-header
+      %a.navbar-brand{href:"#"} Todo List
+    %ul.nav.nav-pills
+      %li.nav-item
+        -if user_signed_in?
+          =link_to 'Sign out', destroy_user_session_path, method: 'delete', class:"nav-link"
+%br
+.container
+  .row
+    .col-sm-2
+      Task list
+      %a.float-right.fa.fa-plus{onClick: 'addTasklist()'}
+      %hr
+      #newtasklist
+      -@tasklists.each do |tasklist|
+        %a{onClick: "renderTask(#{tasklist.id})"} #{tasklist.name}
+        %br
+    .col-sm-1
+    .col-sm-8
+      .row
+        #tasks{style:"width:90%"}

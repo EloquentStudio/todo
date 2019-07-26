@@ -1,0 +1,21 @@
+.tab-content
+  -if !@tasks.first.nil?
+    .tab-pane.fade{id:"tasklist#{@tasks.first.tasklist.id}"}
+    -@tasks.each do |task|
+      .row
+        .card.col-sm-10
+          .row
+            .col-sm-8.align-self-center
+              %span{id:"task#{task.id}",onClick:"renderUpdate(#{@tasks.first.tasklist.id},#{task.id})"}
+                =task.name
+            .col-sm-2
+              %button.float-right.card-body.btn.btn.danger.far.fa-trash-alt{onClick:"deleteTask(#{@tasks.first.tasklist.id},#{task.id})"}
+              %br
+      %br
+    .row
+      %br
+      %button{onClick:"addTask(#{@tasks.first.tasklist.id})",class: "btn btn-primary"} Add Task
+  -else
+    .row
+      %br
+      %button{onClick:"addTask()",class: "btn btn-primary"} Add Task

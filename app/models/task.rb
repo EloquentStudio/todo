@@ -2,5 +2,5 @@
 
 class Task < ApplicationRecord
   belongs_to :tasklist
-  validates :name, :body, presence: true
+  validates :name, presence: true
 end

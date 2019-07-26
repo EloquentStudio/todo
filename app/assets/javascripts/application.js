@@ -10,11 +10,18 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require custom.js
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
-//= require_tree .
 //= require jquery
+//= require popper
+//= require bootstrap
+
 function ajaxcall(tasklist_id,id){
-  $.ajax({url: location.origin+"/updatecheck/"+tasklist_id+"/"+id,success: function(result){console.log(result);}})
+  Rails.ajax({
+    type: "PATCH",
+    url: location.origin+"/tasklists/"+tasklist_id+"/tasks/"+id+"/checkbox_update",
+    success: function(result){console.log(result);}
+  })
 }

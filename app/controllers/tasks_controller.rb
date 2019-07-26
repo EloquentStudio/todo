@@ -9,15 +9,15 @@ class TasksController < ApplicationController
   end
 
   def new
-    @tasks = @tasklist.tasks.build
+    render plain: params
   end
 
   def create
-    @tasks = @tasklist.tasks.new(permit_params)
+    @tasks = @tasklist.tasks.build(tasklist_params)
     if @tasks.save
-      redirect_to tasklist_tasks_path
+      redirect_to root_path
     else
-      render 'new'
+      render plain: params.inspect
     end
   end
 
@@ -31,7 +31,7 @@ class TasksController < ApplicationController
 
   def update
     @tasks = @tasklist.tasks.find(params[:id])
-    if @tasks.update(permit_params)
+    if @tasks.update(tasklist_params)
       redirect_to tasklist_tasks_path(@tasks.tasklist_id)
     else
       render 'edit'
@@ -53,6 +53,10 @@ class TasksController < ApplicationController
 
   def permit_params
     params[:task].permit(:name, :body, :status, :tasklist_id)
+  end
+
+  def tasklist_params
+    params.permit(:tasklist_id, :name)
   end
 
   def set_tasklist
