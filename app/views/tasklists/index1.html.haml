@@ -14,8 +14,16 @@
       %a.float-right.fa.fa-plus{onClick: 'addTasklist()'}
       %hr
       #newtasklist
+      - tasklistCount = 0
       -@tasklists.each do |tasklist|
-        %a{onClick: "renderTask(#{tasklist.id})"} #{tasklist.name}
+        .row.align-middle
+          .col-sm-6
+            .tasklist_list{onClick: "renderTask(#{tasklist.id},#{tasklistCount})", id:"tasklist#{tasklist.id}"} #{tasklist.name}
+          .co-sm-1
+            %a.fa.fa-edit.float-right{onclick: "renderUpdateTasklist(#{tasklist.id})"}
+          .col-sm-1
+            =link_to '', tasklist_path(tasklist.id),method: 'delete', class: "float-right fa fa-trash-alt" ,id: "delete"
+        - tasklistCount += 1
         %br
     .col-sm-1
     .col-sm-8

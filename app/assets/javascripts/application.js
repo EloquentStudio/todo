@@ -10,13 +10,13 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require custom.js
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
 //= require jquery
 //= require popper
 //= require bootstrap
+//= require custom.js
 
 function ajaxcall(tasklist_id,id){
   Rails.ajax({

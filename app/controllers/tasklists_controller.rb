@@ -19,7 +19,7 @@ class TasklistsController < ApplicationController
   def create
     @tasklist = current_user.tasklists.build(tasklist_params)
     if @tasklist.save
-      redirect_to tasklists_path
+      redirect_to root_path
     else
       render 'new'
     end
@@ -29,9 +29,23 @@ class TasklistsController < ApplicationController
     @tasklist = current_user.tasklists.find(params[:id])
   end
 
+  def update
+    tasklist = current_user.tasklists.find(params[:id])
+    if tasklist.update(tasklist_params)
+      redirect_to root_path
+    else
+      render plain: tasklist.errors.full_messages
+    end
+  end
+
   def render_tasks
     @tasks = Tasklist.find(params[:id]).tasks
     render partial: 'task'
+  end
+
+  def destroy
+    Tasklist.find(params[:id]).delete
+    redirect_to root_path
   end
 
   private
