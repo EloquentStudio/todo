@@ -6,7 +6,7 @@
         %div{id:"task#{@task.id}",onClick:"renderUpdate(#{@task.tasklist.id},#{@task.id})"}
           =@task.name
       .col-sm-1
-        %button.pull-right.btn.fa.fa-edit{onclick: "renderUpdate(#{@task.tasklist.id},#{@task.id})"}
+        %button.pull-right.btn.fa.fa-edit{onclick: "renderUpdate(#{@task.tasklist.id},#{@task.id})", id: "taskUpdate"}
       .col-sm-1
-        %button.pull-right.btn.far.fa-trash-alt{onClick:"deleteTask(#{@task.tasklist.id},#{@task.id})"}
+        %button.pull-right.btn.far.fa-trash-alt{onClick:"deleteTask(#{@task.tasklist.id},#{@task.id})", id: "taskDelete"}
         %br

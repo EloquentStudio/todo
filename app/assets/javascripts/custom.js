@@ -26,6 +26,8 @@ function addTasklist() {
 function addTask(tasklistId) {
   if ($("#newTask").length == 0) {
     var input = inputForTask(tasklistId);
+    $('#newtasks').show();
+    console.log("iam here");
     $("#newtasks").append(input);
   }
 }
@@ -95,8 +97,8 @@ function createTask(tasklistId) {
     data: "name=" + $("#newTask").val(),
     success: function(data) {
       $(".tab-content").append($(data).find('DIV')[0]).append("<br>");
-      $('#newTasks').hide();
-      $('#newTask').text("");
+      $('#newtasks').empty();
+      // $('#newTask').text("");
     }
   });
 }
