@@ -1,0 +1,12 @@
+
+.row
+  .card.col-sm-12
+    .row.card-body
+      .col-sm-10.align-self-center
+        %div{id:"task#{@task.id}",onClick:"renderUpdate(#{@task.tasklist.id},#{@task.id})"}
+          =@task.name
+      .col-sm-1
+        %button.pull-right.btn.fa.fa-edit{onclick: "renderUpdate(#{@task.tasklist.id},#{@task.id})"}
+      .col-sm-1
+        %button.pull-right.btn.far.fa-trash-alt{onClick:"deleteTask(#{@task.tasklist.id},#{@task.id})"}
+        %br

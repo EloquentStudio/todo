@@ -1,0 +1,19 @@
+.tab-content
+  -@tasks.each do |task|
+    .row
+      .card.col-sm-12
+        .row.card-body
+          .col-sm-10.align-self-center
+            %div{id:"task#{task.id}",onClick:"renderUpdate(#{params[:id]},#{task.id})"}
+              =task.name
+          .col-sm-1
+            %button.pull.right.btn.fa.fa-edit{onclick: "renderUpdate(#{params[:id]},#{task.id})", id: 'taskUpdate'}
+          .col-sm-1
+            %button.pull-right.btn.far.fa-trash-alt{onClick:"deleteTask(#{params[:id]},#{task.id})", id: 'taskDelete'}
+            %br
+    %br
+.row
+  #newtasks
+.row
+  %br
+  %button{onClick:"addTask(#{params[:id]})",class: "btn btn-primary"} Add Task

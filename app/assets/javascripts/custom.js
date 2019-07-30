@@ -1,32 +1,36 @@
 function inputForTask(tasklistId) {
-  return "<input type='textfield' id=newTask>"
-    + "<button class='btn btn-danger' onClick='createTask(" + tasklistId + ")' >"
-    + "Add Task</button>";
+  return (
+    "<input type='textfield' id=newTask><br>" +
+    "<br><button class='btn btn-danger' onClick='createTask(" +
+    tasklistId +
+    ")' >" +
+    "Add Task</button><br><br>"
+  );
 }
 
-var taskNamePartial=[];
-function restoreTask(taskId){
- $('#task'+taskId).html(taskNamePartial[taskId]);
-console.log($('#task'+taskId).html() + taskId);
-
+var taskNamePartial = [];
+function restoreTask(taskId) {
+  $("#task" + taskId).html(taskNamePartial[taskId]);
+  console.log($("#task" + taskId).html() + taskId);
 }
 
-function inputForTasklist(){
-return "<input type='textfield' id='tasklistnew'> <br><br><button class = 'btn btn-primary' onClick=createTasklist()>Create Tasklist</button><br><br>"
+function inputForTasklist() {
+  $('#newtasklist').show();
+  return "<input type='textfield' id='tasklistnew'> <br><br><button class = 'btn btn-primary' onClick=createTasklist()>Create Tasklist</button><br><br>";
 }
 
-function addTasklist(){
-  $('#newtasklist').html(inputForTasklist());
+function addTasklist() {
+  $("#newtasklist").html(inputForTasklist());
 }
 
 function addTask(tasklistId) {
-  if ($("#newtask").length == 0) {
-    var input = inputForTask(tasklistId)
-    $("#tasks").html($("#tasks").html() + input);
+  if ($("#newTask").length == 0) {
+    var input = inputForTask(tasklistId);
+    $("#newtasks").append(input);
   }
 }
 
-function renderTask(tasklistId,tasklistCount) {
+function renderTask(tasklistId, tasklistCount) {
   $.ajax({
     url: "/tasklists/" + tasklistId + "/render_tasks",
     success: function(result) {
@@ -53,28 +57,31 @@ function renderUpdate(tasklistId, taskId) {
         tasklistId +
         "," +
         taskId +
-        ")>Update</button>"+
-        "<button class='fa fa-times-circle btn' onclick=restoreTask("+taskId+")/>"
+        ")>Update</button>" +
+        "<button class='fa fa-times-circle btn' onclick=restoreTask(" +
+        taskId +
+        ")/>"
     );
   }
 }
-function createTasklist(){
+function createTasklist() {
   Rails.ajax({
     type: "post",
     url: "/tasklists",
     data: "name=" + $("#tasklistnew").val(),
     success: function(data) {
-      console.log(data);
-      console.log($("#newTask").val());
+      $("#tasklists").append($(data).find('DIV')[0]).append("<br>");
+      $('#newtasklist').hide();
+      $('#tasklistnew').val("");
     }
   });
 }
 
-function updateTasklist(tasklistId){
+function updateTasklist(tasklistId) {
   Rails.ajax({
     type: "put",
-    url: "/tasklists/"+tasklistId+"/",
-    data: "name="+$("#updateTasklistInput"+tasklistId).val(),
+    url: "/tasklists/" + tasklistId + "/",
+    data: "name=" + $("#updateTasklistInput" + tasklistId).val(),
     success: function(data) {
       console.log(data);
       console.log($("#newTask").val());
@@ -87,8 +94,9 @@ function createTask(tasklistId) {
     url: "tasklists/" + tasklistId + "/tasks/",
     data: "name=" + $("#newTask").val(),
     success: function(data) {
-      console.log(data);
-      console.log($("#newTask").val());
+      $(".tab-content").append($(data).find('DIV')[0]).append("<br>");
+      $('#newTasks').hide();
+      $('#newTask').text("");
     }
   });
 }
@@ -104,7 +112,7 @@ function updateTask(tasklistId, taskId) {
   });
 }
 
-function deleteTask(tasklistId,taskId){
+function deleteTask(tasklistId, taskId) {
   Rails.ajax({
     type: "delete",
     url: "tasklists/" + tasklistId + "/tasks/" + taskId,
@@ -114,38 +122,52 @@ function deleteTask(tasklistId,taskId){
   });
 }
 
-function setSelectedTasklist(selectedTasklist){
-localStorage.setItem("selectedTasklistCount",selectedTasklist);
+function setSelectedTasklist(selectedTasklist) {
+  localStorage.setItem("selectedTasklistCount", selectedTasklist);
 }
 
-function defaultSelectedTasklist(){
-  $(document).ready(function(){
-    if(typeof (localStorage.getItem("selectedTasklistCount")) == 'undefine'){
-      $(document).find(".tasklist_list")[0].click();
-    }else
-    $(document).find(".tasklist_list")[localStorage.getItem("selectedTasklistCount")].click();
-  });
+function defaultSelectedTasklist() {
+  $(document).ready(function() {
+    console.log(localStorage.getItem("selectedTasklistCount"));
+    if (typeof (Storage) !== 'undefine') {
+      $(document)
+        .find(".tasklist_list")[0]
+        .click();
+    } else{
+    $(document)
+        .find(".tasklist_list")[
+        localStorage.getItem("selectedTasklistCount")].click();
+  }});
 }
 defaultSelectedTasklist();
 
-function inputForUpdateTasklist(tasklistId){
-return "<div class='col-sm-4 float-left'>"+
-"<input type='textfield' id='updateTasklistInput"+tasklistId+"'>"+
-"</div>"+
-"<div class='col-sm-1 float-right'>"+
-"<Button class='btn fa fa-edit' onclick=updateTasklist("+tasklistId+")/>"+
-"</div>"+
-"<div class='col-sm-1 float-right'>"+
-"<Button class='btn far fa-times-circle' onclick=restoreTasklist("+tasklistId+")/>"+
-"</div>"
+function inputForUpdateTasklist(tasklistId) {
+  return (
+    "<div class='col-sm-8 float-left'>" +
+    "<input type='textfield' class='col-sm-12' id='updateTasklistInput" +
+    tasklistId +
+    "' value='"+$('#tasklist'+tasklistId).text() + "'>"+
+    "</div>" +
+    "<div class='col-sm-1 float-right'>" +
+    "<Button class='btn fa fa-edit' onclick=updateTasklist(" +
+    tasklistId +
+    ")/>" +
+    "</div>" +
+    "<div class='col-sm-1 float-right'>" +
+    "<Button class='btn far fa-times-circle' onclick=restoreTasklist(" +
+    tasklistId +
+    ")/>" +
+    "</div>"
+  );
 }
 
-
-function restoreTasklist(tasklistId){
-  $('#tasklist'+tasklistId).html(tasklistNamePartial[tasklistId]);
+function restoreTasklist(tasklistId) {
+  $("#tasklist" + tasklistId).html(tasklistNamePartial[tasklistId]);
 }
-var tasklistNamePartial=[];
-function renderUpdateTasklist(tasklistId){
-tasklistNamePartial[tasklistId] = $('#tasklist'+tasklistId).text();
-$('#tasklist'+tasklistId).html(inputForUpdateTasklist(tasklistId));
+
+var tasklistNamePartial = [];
+
+function renderUpdateTasklist(tasklistId) {
+  tasklistNamePartial[tasklistId] = $("#tasklist" + tasklistId).text();
+  $("#tasklist_list" + tasklistId).html(inputForUpdateTasklist(tasklistId));
 }

@@ -3,18 +3,34 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 @import 'bootstrap';
 
-.tasklist_list:hover{
+.tasklistname:hover{
 cursor: pointer;
-
+#delete{
+  visibility: visible
 }
 
-#update
-{
+#update{
   visibility: visible;
 }
 
-#delete
+}
+
+#update, #taskUpdate
 {
+  visibility: hidden;
+}
+
+#delete, #taskDelete
+{
+  visibility: hidden;
+}
+
+.card-body:hover{
+#taskDelete{
   visibility: visible;
 }
 
+#taskUpdate{
+  visibility: visible;
+}
+}

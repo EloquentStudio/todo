@@ -4,29 +4,11 @@ class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_tasklist
 
-  def index
-    @tasks = @tasklist.tasks
-  end
-
-  def new
-    render plain: params
-  end
+  def index; end
 
   def create
-    @tasks = @tasklist.tasks.build(tasklist_params)
-    if @tasks.save
-      redirect_to root_path
-    else
-      render plain: params.inspect
-    end
-  end
-
-  def show
-    @tasks = @tasklist.tasks.find(params[:id])
-  end
-
-  def edit
-    @tasks = @tasklist.tasks.find(params[:id])
+    @task = @tasklist.tasks.build(tasklist_params)
+    render partial: 'task' if @task.save
   end
 
   def update
@@ -41,7 +23,8 @@ class TasksController < ApplicationController
   def destroy
     @tasks = @tasklist.tasks.find(params[:id])
     @tasks.destroy
-    redirect_to tasklist_tasks_path(@tasks.tasklist_id)
+    # render json
+    redirect_to root_path
   end
 
   def checkbox_update
