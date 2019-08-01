@@ -1,12 +1,14 @@
 
 .row
   .card.col-sm-12
-    .row.card-body
-      .col-sm-10.align-self-center
+    .row.card-body{id: "card#{@task.id}"}
+      .col-sm-1.align-self-center
+        %input{type: 'checkbox', id: "checkbox#{@task.id}", onclick: "updateTaskStatus(#{@task.tasklist.id},#{@task.id})", "checked": @task.status}
+      .col-sm-8.align-self-center
         %div{id:"task#{@task.id}",onClick:"renderUpdate(#{@task.tasklist.id},#{@task.id})"}
           =@task.name
-      .col-sm-1
-        %button.pull-right.btn.fa.fa-edit{onclick: "renderUpdate(#{@task.tasklist.id},#{@task.id})", id: "taskUpdate"}
-      .col-sm-1
-        %button.pull-right.btn.far.fa-trash-alt{onClick:"deleteTask(#{@task.tasklist.id},#{@task.id})", id: "taskDelete"}
+      .col-sm-1.align-self-center
+        %span.fa.fa-edit{onclick: "renderUpdate(#{@task.tasklist.id},#{@task.id})", id: "taskUpdate"}
+      .col-sm-1.align-self-center
+        %span.far.fa-trash-alt{onClick:"deleteTask(#{@task.tasklist.id},#{@task.id})", id: "taskDelete"}
         %br

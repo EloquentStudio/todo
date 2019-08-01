@@ -17,12 +17,18 @@ cursor: pointer;
 
 #update, #taskUpdate
 {
+  color: #93922a;
   visibility: hidden;
 }
 
 #delete, #taskDelete
 {
+  color:#AD423F  ;
   visibility: hidden;
+}
+
+.card-body{
+  border: 0px;
 }
 
 .card-body:hover{
@@ -32,5 +38,11 @@ cursor: pointer;
 
 #taskUpdate{
   visibility: visible;
+}
+}
+
+checkbox:checked{
+.card-body{
+background-color: grey;
 }
 }

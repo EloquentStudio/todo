@@ -13,12 +13,8 @@ class TasklistsController < ApplicationController
   end
 
   def update
-    tasklist = current_user.tasklists.find(params[:id])
-    if tasklist.update(tasklist_params)
-      redirect_to root_path
-    else
-      render plain: tasklist.errors.full_messages
-    end
+    @tasklist = current_user.tasklists.find(params[:id])
+    render partial: 'tasklist' if @tasklist.update(tasklist_params)
   end
 
   def render_tasks
@@ -27,7 +23,7 @@ class TasklistsController < ApplicationController
   end
 
   def destroy
-    Tasklist.find(params[:id]).delete
+    Tasklist.find(params[:id]).destroy
     redirect_to root_path
   end
 

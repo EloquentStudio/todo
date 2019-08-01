@@ -12,19 +12,13 @@ class TasksController < ApplicationController
   end
 
   def update
-    @tasks = @tasklist.tasks.find(params[:id])
-    if @tasks.update(tasklist_params)
-      redirect_to root_path
-    else
-      render 'edit'
-    end
+    @task = @tasklist.tasks.find(params[:id])
+    render partial: 'task' if @task.update(tasklist_params)
   end
 
   def destroy
-    @tasks = @tasklist.tasks.find(params[:id])
-    @tasks.destroy
-    # render json
-    redirect_to root_path
+    tasks = @tasklist.tasks.find(params[:id])
+    tasks.destroy
   end
 
   def checkbox_update

@@ -2,18 +2,21 @@
   -@tasks.each do |task|
     .row
       .card.col-sm-12
-        .row.card-body
-          .col-sm-10.align-self-center
+        .row.card-body{id: "card#{task.id}"}
+          .col-sm-1.align-self-center
+            %input{type: 'checkbox', id: "checkbox#{task.id}", onclick: "updateTaskStatus(#{params[:id]},#{task.id})", "checked": task.status}
+          .col-sm-8.align-self-center
             %div{id:"task#{task.id}",onClick:"renderUpdate(#{params[:id]},#{task.id})"}
               =task.name
-          .col-sm-1
-            %button.pull.right.btn.fa.fa-edit{onclick: "renderUpdate(#{params[:id]},#{task.id})", id: 'taskUpdate'}
-          .col-sm-1
-            %button.pull-right.btn.far.fa-trash-alt{onClick:"deleteTask(#{params[:id]},#{task.id})", id: 'taskDelete'}
+          .col-sm-1.align-self-center
+            %span.fa.fa-edit{onclick: "renderUpdate(#{params[:id]},#{task.id})", id: 'taskUpdate'}
+          .col-sm-1.align-self-center
+            %span.btn.far.fa-trash-alt{onClick:"deleteTask(#{params[:id]},#{task.id})", id: 'taskDelete'}
             %br
     %br
 .row
-  #newtasks
+  #newtasks{class: 'col-sm-12'}
+%br
 .row
   %br
   %button{onClick:"addTask(#{params[:id]})",class: "btn btn-primary"} Add Task
