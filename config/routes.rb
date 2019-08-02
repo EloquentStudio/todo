@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     end
     resources :tasks do
       member do
-        patch 'updateStatus'
+        patch 'toggle_status'
       end
     end
   end

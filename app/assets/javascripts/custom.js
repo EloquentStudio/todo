@@ -349,7 +349,7 @@ function updateTaskStatus() {
   tasklistId = $(this).data("tasklistid");
   taskId = $(this).data("taskid");
   Rails.ajax({
-    url: "/tasklists/" + tasklistId + "/tasks/" + taskId + "/updateStatus",
+    url: "/tasklists/" + tasklistId + "/tasks/" + taskId + "/toggle_status",
     type: "patch",
     success: function(data) {}
   });
