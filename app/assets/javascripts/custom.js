@@ -1,12 +1,8 @@
-function bindView() {
-  $(document).ready(function() {
-    $("#newTasklistButton").on("click", addTasklist);
-    $(".tasklist_list").on("click", renderTask);
-    $(".tasklistUpdateButton").on("click", renderUpdateTasklist);
-  });
-}
-
-bindView();
+$(document).ready(function() {
+  $("#newTasklistButton").on("click", addTasklist);
+  $(".tasklist_list").on("click", renderTask);
+  $(".tasklistUpdateButton").on("click", renderUpdateTasklist);
+});
 
 function inputForTask(tasklistId) {
   return (
@@ -345,11 +341,7 @@ function renderUpdateTasklist() {
   $("#tasklist_list" + tasklistId).html(
     inputForUpdateTasklist(tasklistId, index)
   );
-  $(".saveUpdateTasklistButton").bind(
-    "click",
-    { tasklistid: tasklistId, index: index },
-    updateTasklist
-  );
+  $(".saveUpdateTasklistButton").bind("click", updateTasklist);
   $(".cancelUpdateTasklistButton").bind("click", restoreUpdateTasklist);
 }
 
