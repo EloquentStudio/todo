@@ -21,7 +21,7 @@ class TasksController < ApplicationController
     tasks.destroy
   end
 
-  def checkbox_update
+  def updateStatus
     task = @tasklist.tasks.find(params[:id])
     task.update!(status: !task.status)
   end

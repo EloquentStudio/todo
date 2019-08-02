@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     end
     resources :tasks do
       member do
-        patch 'checkbox_update'
+        patch 'updateStatus'
       end
     end
   end
