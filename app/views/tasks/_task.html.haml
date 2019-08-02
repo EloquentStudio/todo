@@ -1,14 +1,13 @@
-
 .row
   .card.col-sm-12
     .row.card-body{id: "card#{@task.id}"}
       .col-sm-1.align-self-center
-        %input{type: 'checkbox', id: "checkbox#{@task.id}", onclick: "updateTaskStatus(#{@task.tasklist.id},#{@task.id})", "checked": @task.status}
+        %input{type: 'checkbox', id: "checkbox#{@task.id}", "data-tasklistid": @task.tasklist.id, "data-taskid": @task.id, "checked": @task.status}
       .col-sm-8.align-self-center
-        %div{id:"task#{@task.id}",onClick:"renderUpdate(#{@task.tasklist.id},#{@task.id})"}
+        %div.taskname{id:"task#{@task.id}", "data-tasklistid": @task.tasklist.id, "data-taskid": @task.id}
           =@task.name
       .col-sm-1.align-self-center
-        %span.fa.fa-edit{onclick: "renderUpdate(#{@task.tasklist.id},#{@task.id})", id: "taskUpdate"}
+        %span.fa.fa-edit#taskUpdate.taskUpdate{"data-tasklistid": @task.tasklist.id, "data-taskid": @task.id}
       .col-sm-1.align-self-center
-        %span.far.fa-trash-alt{onClick:"deleteTask(#{@task.tasklist.id},#{@task.id})", id: "taskDelete"}
+        %span.far.fa-trash-alt.taskDelete#taskDelete{"data-tasklistid": @task.tasklist.id, "data-taskid": @task.id}
         %br

@@ -18,10 +18,3 @@
 //= require bootstrap
 //= require custom.js
 
-function ajaxcall(tasklist_id,id){
-  Rails.ajax({
-    type: "PATCH",
-    url: location.origin+"/tasklists/"+tasklist_id+"/tasks/"+id+"/checkbox_update",
-    success: function(result){console.log(result);}
-  })
-}

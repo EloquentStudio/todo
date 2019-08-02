@@ -11,20 +11,18 @@
   .row
     .col-sm-2
       Task lists
-      %a.float-right.fa.fa-plus{onClick: 'addTasklist()'}
+      %a-#newTasklistButton.float-right.fa.fa-plus
       %hr
       #newtasklist
       #tasklists
-        - tasklistCount = 0
-        -@tasklists.each do |tasklist|
+        -@tasklists.each_with_index do |tasklist,index|
           .row.align-middle.tasklistname{id: "tasklist_list#{tasklist.id}"}
             .col-sm-8
-              .tasklist_list{onClick: "renderTask(#{tasklist.id},#{tasklistCount})", id:"tasklist#{tasklist.id}"} #{tasklist.name}
+              .tasklist_list{"data-tasklistid": tasklist.id, "data-index": index, id:"tasklist#{tasklist.id}"} #{tasklist.name}
             .col-sm-1
-              %a.fa.fa-edit.pull-right{onclick: "renderUpdateTasklist(#{tasklist.id}, #{tasklistCount})", id: 'update'}
+              %a.fa.fa-edit.pull-right.tasklistUpdateButton{"data-tasklistid": tasklist.id, "data-index": index, id: 'update'}
             .col-sm-1
               =link_to '', tasklist_path(tasklist.id),method: 'delete', class: "pull-right fa fa-trash-alt" ,id: "delete"
-          - tasklistCount += 1
           %br
     .col-sm-1
     .col-sm-8
