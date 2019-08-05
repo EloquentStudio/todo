@@ -253,21 +253,22 @@ function setSelectedTasklist(selectedTasklist) {
   localStorage.setItem("selectedTasklistCount", selectedTasklist);
 }
 
-function defaultSelectedTasklist() {
+function setActiveTaskList() {
+  var storage = localStorage.getItem("selectedTasklistCount")
   $(document).ready(function() {
-    if (localStorage.getItem("selectedTasklistCount") === null) {
+    if (storage === null) {
       $(document)
         .find(".tasklist_list")[0]
         .click();
     } else {
       $(document)
         .find(".tasklist_list")
-        [localStorage.getItem("selectedTasklistCount")].click();
+        [storage].click();
     }
   });
 }
 
-defaultSelectedTasklist();
+setActiveTaskList();
 
 function inputForUpdateTasklist(tasklistId, index) {
   return (

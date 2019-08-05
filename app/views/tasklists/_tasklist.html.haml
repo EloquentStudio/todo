@@ -1,4 +1,4 @@
-.row.algin-middle.tasklistname{id: "tasklist_list#{@tasklist.id}"}
+.row.align-middle.tasklistname{id: "tasklist_list#{@tasklist.id}"}
   .col-sm-8
     .tasklist_list{"data-index": current_user.tasklists.count - 1, "data-tasklistid": @tasklist.id, id: "tasklist#{@tasklist.id}"}
       = @tasklist.name

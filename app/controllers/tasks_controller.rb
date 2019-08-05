@@ -3,6 +3,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_tasklist
+  before_action :set_task
 
   def index; end
 
@@ -12,18 +13,15 @@ class TasksController < ApplicationController
   end
 
   def update
-    @task = @tasklist.tasks.find(params[:id])
     render partial: 'task' if @task.update(tasklist_params)
   end
 
   def destroy
-    tasks = @tasklist.tasks.find(params[:id])
-    tasks.destroy
+    @task.destroy
   end
 
   def toggle_status
-    task = @tasklist.tasks.find(params[:id])
-    task.update!(status: !task.status)
+    @task.update!(status: !task.status)
   end
 
   private
@@ -38,5 +36,9 @@ class TasksController < ApplicationController
 
   def set_tasklist
     @tasklist = current_user.tasklists.find(params[:tasklist_id])
+  end
+
+  def set_task
+    @task = @tasklist.tasks.find(params[:id])
   end
 end
