@@ -3,7 +3,7 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_tasklist
-  before_action :set_task
+  before_action :set_task, except: :create
 
   def index; end
 
@@ -21,7 +21,7 @@ class TasksController < ApplicationController
   end
 
   def toggle_status
-    @task.update!(status: !task.status)
+    @task.update!(status: !@task.status)
   end
 
   private

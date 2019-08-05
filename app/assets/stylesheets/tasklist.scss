@@ -27,11 +27,8 @@ cursor: pointer;
   visibility: hidden;
 }
 
-.card-body{
-  border: 0px;
-}
 
-.card-body:hover{
+.tab-content li:hover{
 #taskDelete{
   visibility: visible;
 }

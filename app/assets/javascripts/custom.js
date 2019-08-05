@@ -6,13 +6,14 @@ $(document).ready(function() {
 
 function inputForTask(tasklistId) {
   return (
-    "<div class = 'row card-body'>" +
+    "<li class = 'list-group-item'>"+
+    "<div class = 'row'>" +
     "<div class = 'col-sm-12'>" +
     "<input type= 'textfield' class='form-control' id=newTask><br></div>" +
     "<div class = 'col-sm-2 pull-right'><button class='createNewTaskButton btn btn-danger' data-tasklistid = " +
     tasklistId +
-    "'>Save</button></div>" +
-    "<div class = 'col-sm-3 align-self-end'><div class = 'cancelNewTaskButton'>Cancel</div></div></div>"
+    ">Save</button></div>" +
+    "<div class = 'col-sm-3 align-self-end'><div class = 'cancelNewTaskButton'>Cancel</div></div></div></li>"
   );
 }
 
@@ -101,7 +102,6 @@ function addTask() {
   if ($("#newTask").length == 0) {
     var input = inputForTask($(this).data("tasklistid"));
     $("#newtasks").show();
-    $("#newtasks").addClass("card");
     $("#newtasks").append(input);
     $(".createNewTaskButton").on("click", createTask);
     $(".cancelNewTaskButton").on("click", restoreCreateTask);
@@ -170,7 +170,7 @@ function createTasklist() {
     data: "name=" + $("#tasklistnew").val(),
     success: function(data) {
       $("#tasklists")
-        .append($(data).find("DIV")[0])
+        .append($(data).find("li")[0])
         .append("<br>");
       $("#newtasklist").empty();
       $("#tasklistnew").val("");
@@ -206,9 +206,8 @@ function createTask() {
     url: "tasklists/" + tasklistId + "/tasks/",
     data: "name=" + $("#newTask").val(),
     success: function(data) {
-      $(".tab-content")
-        .append($(data).find("DIV")[0])
-        .append("<br>");
+      $(".tab-content .list-group")
+        .append($(data).find("li")[0]);
       restoreCreateTask();
       $(".taskDelete").on("click", deleteTask);
       $(":checkbox").on("click", updateTaskStatus);
@@ -296,7 +295,7 @@ function inputForUpdateTasklist(tasklistId, index) {
 
 function restoreUpdateTasklistView(tasklistId, index) {
   return (
-    "<div class = 'col-sm-8'>" +
+    "<div class = 'col-sm-6'>" +
     "<div class = 'tasklist_list' id='tasklist" +
     tasklistId +
     "' data-tasklistid = " +
@@ -362,7 +361,6 @@ function restoreCreateTasklist() {
 
 function restoreCreateTask() {
   $("#newtasks").empty();
-  $("#newtasks").removeClass("card");
   $(".taskname").on("click", renderUpdate);
   $(".taskUpdate").on("click", renderUpdate);
 }

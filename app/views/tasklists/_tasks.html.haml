@@ -1,22 +1,24 @@
 .tab-content
-  -@tasks.each do |task|
-    .row
-      .card.col-sm-12
-        .row.card-body{id: "card#{task.id}"}
-          .col-sm-1.align-self-center
-            %input{type: 'checkbox', id: "checkbox#{task.id}", "data-tasklistid": params[:id], "data-taskid": task.id, "checked": task.status}
-          .col-sm-8.align-self-center
-            %div.taskname{id:"task#{task.id}", "data-tasklistid": params[:id], "data-taskid": task.id}
-              =task.name
-          .col-sm-1.align-self-center
-            %span.fa.fa-edit#taskUpdate.taskUpdate{"data-tasklistid": params[:id], "data-taskid": task.id}
-          .col-sm-1.align-self-center
-            %span.far.fa-trash-alt#taskDelete.taskDelete{"data-tasklistid": params[:id], "data-taskid": task.id}
-            %br
-    %br
-.row
-  #newtasks{class: 'col-sm-12'}
+  %ul.list-group
+    -@tasks.each do |task|
+      %li.list-group-item
+        .row
+          .col-sm-12
+            .row{id: "card#{task.id}"}
+              .col-sm-1.align-self-center
+                %input{type: 'checkbox', id: "checkbox#{task.id}", "data-tasklistid": params[:id], "data-taskid": task.id, "checked": task.status}
+              .col-sm-8.align-self-center
+                %div.taskname{id:"task#{task.id}", "data-tasklistid": params[:id], "data-taskid": task.id}
+                  =task.name
+              .col-sm-1.align-self-center
+                %span.fa.fa-edit#taskUpdate.taskUpdate{"data-tasklistid": params[:id], "data-taskid": task.id}
+              .col-sm-1.align-self-center
+                %span.far.fa-trash-alt#taskDelete.taskDelete{"data-tasklistid": params[:id], "data-taskid": task.id}
 %br
-.row
-  %br
-  %button.btn.btn-primary#addTaskButton{"data-tasklistid": params[:id]} Add Task
+%ul.list-group
+  .row
+    #newtasks{class: 'col-sm-12'}
+  %li.list-group-item
+    .row
+      %br
+      %button.btn.btn-primary#addTaskButton{"data-tasklistid": params[:id]} Add Task

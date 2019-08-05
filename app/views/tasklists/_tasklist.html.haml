@@ -1,8 +1,9 @@
-.row.align-middle.tasklistname{id: "tasklist_list#{@tasklist.id}"}
-  .col-sm-8
-    .tasklist_list{"data-index": current_user.tasklists.count - 1, "data-tasklistid": @tasklist.id, id: "tasklist#{@tasklist.id}"}
-      = @tasklist.name
-  .col-sm-1
-    %a.fa.fa-edit.pull-right.tasklistUpdateButton{"data-index": current_user.tasklists.count - 1, "data-tasklistid": @tasklist.id, id: "update"}
-  .col-sm-1
-    =link_to '', tasklist_path(@tasklist.id),method: 'delete', class: "pull-right fa fa-trash-alt" ,id: "delete"
+%li.list-group-item
+  .row.align-middle.tasklistname{id: "tasklist_list#{@tasklist.id}"}
+    .col-sm-6
+      .tasklist_list{"data-index": current_user.tasklists.count - 1, "data-tasklistid": @tasklist.id, id: "tasklist#{@tasklist.id}"}
+        = @tasklist.name
+    .col-sm-1
+      %a.fa.fa-edit.pull-right.tasklistUpdateButton{"data-index": current_user.tasklists.count - 1, "data-tasklistid": @tasklist.id, id: "update"}
+    .col-sm-1
+      =link_to '', tasklist_path(@tasklist.id),method: 'delete', class: "pull-right fa fa-trash-alt" ,id: "delete"
