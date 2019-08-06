@@ -17,4 +17,4 @@
 //= require popper
 //= require bootstrap
 //= require custom.js
-
+//= require toastr

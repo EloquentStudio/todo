@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_18_063627) do
+ActiveRecord::Schema.define(version: 2019_08_06_091556) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
@@ -48,7 +48,6 @@ ActiveRecord::Schema.define(version: 2019_07_18_063627) do
 
   create_table "tasks", force: :cascade do |t|
     t.string "name"
-    t.text "body"
     t.boolean "status"
     t.integer "tasklist_id"
     t.datetime "created_at", null: false

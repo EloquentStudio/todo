@@ -2,29 +2,32 @@ $(document).ready(function() {
   const storage = localStorage.getItem("selectedTasklistCount");
   $("#newTasklistButton").on("click", addTasklist);
   $(".tasklist_list").on("click", renderTask);
-  $(".tasklistname").on("click",".tasklistUpdateButton", renderUpdateTasklist);
-  $("#tasks").on("click", ".taskname" , renderUpdate);
-  $("#tasks").on("click", ".taskUpdate" , renderUpdate);
+  $("#tasklists").on("click", ".tasklist_list" ,renderTask);
+  $("#tasklists").on("click", ".tasklistUpdateButton", renderUpdateTasklist);
+  $(".tasklistname").on("click", ".tasklistUpdateButton", renderUpdateTasklist);
+  $("#tasks").on("click", ".taskname", renderUpdate);
+  $("#tasks").on("click", ".taskUpdate", renderUpdate);
   $(":checkbox").on("click", updateTaskStatus);
-  $("#newtasklist").on("click","#createTasklistButton", createTasklist);
-  $("#newtasklist").on("click","#cancelCreateTasklist", restoreCreateTasklist);
-  $("#tasks").on("click", ".createNewTaskButton" ,createTask);
-  $("#tasks").on("click", ".cancelNewTaskButton" ,restoreCreateTask);
-  $("#tasks").on("click","#addTaskButton", addTask);
-  $("#tasks").on("click", ".taskDelete" ,deleteTask);
-  $("#tasks").on("click", ".updateTaskSaveButton" ,updateTask);
-  $("#tasks").on("click", ".updateTaskCancelButton" ,restoreTask);
+  $("#newtasklist").on("click", "#createTasklistButton", createTasklist);
+  $("#newtasklist").on("click", "#cancelCreateTasklist", restoreCreateTasklist);
+  $("#tasks").on("click", ".createNewTaskButton", createTask);
+  $("#tasks").on("click", ".cancelNewTaskButton", restoreCreateTask);
+  $("#tasks").on("click", "#addTaskButton", addTask);
+  $("#tasks").on("click", ".taskDelete", deleteTask);
+  $("#tasks").on("click", ".updateTaskSaveButton", updateTask);
+  $("#tasks").on("click", ".updateTaskCancelButton", restoreTask);
   if (storage === null) {
   } else {
     $(document)
-      .find("#tasklist"+storage).click();
-      setSelectedTasklist(storage);
+      .find("#tasklist" + storage)
+      .click();
+    setSelectedTasklist(storage);
   }
 });
 
 function inputForTask(tasklistId) {
   return (
-    "<li class = 'list-group-item'>"+
+    "<li class = 'list-group-item'>" +
     "<div class = 'row'>" +
     "<div class = 'col-sm-12'>" +
     "<input type= 'textfield' class='form-control' id=newTask><br></div>" +
@@ -40,7 +43,7 @@ function restoreTask() {
   const taskId = $(this).data("taskid");
   $("#card" + taskId).empty();
   $("#card" + taskId).append(restoreTaskView(tasklistId, taskId));
-  if ($('#card'+taskId).data("status") == true) {
+  if ($("#card" + taskId).data("status") == true) {
     $("#checkbox" + taskId).attr("checked", "checked");
   }
 }
@@ -64,7 +67,7 @@ function restoreTaskView(tasklistId, taskId) {
     " data-taskid = " +
     taskId +
     ">" +
-    $('#card'+taskId).data("title") +
+    $("#card" + taskId).data("title") +
     "</div>" +
     "</div>" +
     "<div class = 'col-sm-1 align-self-center'>" +
@@ -159,8 +162,11 @@ function renderUpdate() {
     $("#task" + taskId).find($("#inputTask" + taskId)).length == 0
   ) {
     const text = $("#task" + taskId).text();
-    $('#card'+taskId).attr("data-title",text);
-    $('#card'+taskId).attr("data-status", $("#checkbox" + taskId).prop("checked"));
+    $("#card" + taskId).attr("data-title", text);
+    $("#card" + taskId).attr(
+      "data-status",
+      $("#checkbox" + taskId).prop("checked")
+    );
     $("#card" + taskId).html(updateTaskView(tasklistId, taskId));
   }
 }
@@ -171,13 +177,16 @@ function createTasklist() {
     url: "/tasklists",
     data: "name=" + $("#tasklistnew").val(),
     success: function(data) {
-      $("#tasklists")
-        .append($(data).find("li")[0]);
+      $("#tasklists").append($(data).find("li")[0]);
       $("#newtasklist").empty();
       $("#tasklistnew").val("");
       $("#tasklists")
         .find(".tasklist_list")
         .click();
+    },
+    error: function(data) {
+      const json = JSON.parse(JSON.stringify(data));
+      toastr.error(json);
     }
   });
 }
@@ -194,6 +203,10 @@ function updateTasklist() {
         .append($(data).find("DIV")[1])
         .append($(data).find("DIV")[1])
         .append($(data).find("DIV")[1]);
+    },
+    error: function(data) {
+      const json = JSON.parse(JSON.stringify(data));
+      toastr.error(json);
     }
   });
 }
@@ -204,9 +217,12 @@ function createTask() {
     url: "tasklists/" + tasklistId + "/tasks/",
     data: "name=" + $("#newTask").val(),
     success: function(data) {
-      $(".tab-content .list-group")
-        .append($(data).find("li")[0]);
+      $(".tab-content .list-group").append($(data).find("li")[0]);
       restoreCreateTask();
+    },
+    error: function(data) {
+      const json = JSON.parse(JSON.stringify(data));
+      toastr.error(json);
     }
   });
 }
@@ -225,6 +241,10 @@ function updateTask() {
         .append($(data).find("DIV")[3])
         .append($(data).find("DIV")[3])
         .append($(data).find("DIV")[3]);
+    },
+    error: function(data) {
+      const json = JSON.parse(JSON.stringify(data));
+      toastr.error(json);
     }
   });
 }
@@ -243,12 +263,15 @@ function deleteTask() {
 
 function setSelectedTasklist(selectedTasklist) {
   var currentTasklist = localStorage.getItem("selectedTasklistCount");
-  $('#tasklist_list'+currentTasklist).parent().removeClass('active');
+  $("#tasklist_list" + currentTasklist)
+    .parent()
+    .removeClass("active");
   localStorage.setItem("selectedTasklistCount", selectedTasklist);
   currentTasklist = localStorage.getItem("selectedTasklistCount");
-  $('#tasklist_list'+currentTasklist).parent().addClass('active');
+  $("#tasklist_list" + currentTasklist)
+    .parent()
+    .addClass("active");
 }
-
 
 function inputForUpdateTasklist(tasklistId, index) {
   return (
@@ -284,7 +307,7 @@ function restoreUpdateTasklistView(tasklistId, index) {
     " data-index = " +
     index +
     ">" +
-    $('#tasklist_list'+tasklistId).data("name") +
+    $("#tasklist_list" + tasklistId).data("name") +
     "</div>" +
     "</div>" +
     "<div class = 'col-sm-1'>" +
@@ -308,16 +331,18 @@ function restoreUpdateTasklist() {
   $("#tasklist_list" + tasklistId).html(
     restoreUpdateTasklistView(tasklistId, index)
   );
-  $('#tasklist_list'+tasklistId).removeAttr("data-index");
-  $('#tasklist_list'+tasklistId).removeAttr("data-name");
+  $("#tasklist_list" + tasklistId).removeAttr("data-index");
+  $("#tasklist_list" + tasklistId).removeAttr("data-name");
 }
-
 
 function renderUpdateTasklist() {
   const tasklistId = $(this).data("tasklistid");
   const index = $(this).data("index");
-  $("#tasklist_list"+tasklistId).attr("data-name",$("#tasklist" + tasklistId).text());
-  $("#tasklist_list"+tasklistId).attr("data-index",index);
+  $("#tasklist_list" + tasklistId).attr(
+    "data-name",
+    $("#tasklist" + tasklistId).text()
+  );
+  $("#tasklist_list" + tasklistId).attr("data-index", index);
   tasklistIndex = index;
   $("#tasklist_list" + tasklistId).html(
     inputForUpdateTasklist(tasklistId, index)

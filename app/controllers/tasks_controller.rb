@@ -9,11 +9,19 @@ class TasksController < ApplicationController
 
   def create
     @task = @tasklist.tasks.build(tasklist_params)
-    render partial: 'task' if @task.save
+    if @task.save
+      render partial: 'task'
+    else
+      render json: @task.errors.full_messages, status: 422
+    end
   end
 
   def update
-    render partial: 'task' if @task.update(tasklist_params)
+    if @task.update(tasklist_params)
+      render partial: 'task'
+    else
+      render json: @task.errors.full_messages, status: 422
+    end
   end
 
   def destroy
