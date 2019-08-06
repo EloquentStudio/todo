@@ -1,7 +1,25 @@
 $(document).ready(function() {
+  const storage = localStorage.getItem("selectedTasklistCount");
   $("#newTasklistButton").on("click", addTasklist);
   $(".tasklist_list").on("click", renderTask);
-  $(".tasklistUpdateButton").on("click", renderUpdateTasklist);
+  $(".tasklistname").on("click",".tasklistUpdateButton", renderUpdateTasklist);
+  $("#tasks").on("click", ".taskname" , renderUpdate);
+  $("#tasks").on("click", ".taskUpdate" , renderUpdate);
+  $(":checkbox").on("click", updateTaskStatus);
+  $("#newtasklist").on("click","#createTasklistButton", createTasklist);
+  $("#newtasklist").on("click","#cancelCreateTasklist", restoreCreateTasklist);
+  $("#tasks").on("click", ".createNewTaskButton" ,createTask);
+  $("#tasks").on("click", ".cancelNewTaskButton" ,restoreCreateTask);
+  $("#tasks").on("click","#addTaskButton", addTask);
+  $("#tasks").on("click", ".taskDelete" ,deleteTask);
+  $("#tasks").on("click", ".updateTaskSaveButton" ,updateTask);
+  $("#tasks").on("click", ".updateTaskCancelButton" ,restoreTask);
+  if (storage === null) {
+  } else {
+    $(document)
+      .find("#tasklist"+storage).click();
+      setSelectedTasklist(storage);
+  }
 });
 
 function inputForTask(tasklistId) {
@@ -25,9 +43,6 @@ function restoreTask() {
   if ($('#card'+taskId).data("status") == true) {
     $("#checkbox" + taskId).attr("checked", "checked");
   }
-  $(".taskname").on("click", renderUpdate);
-  $(".taskUpdate").on("click", renderUpdate);
-  $(":checkbox").on("click", updateTaskStatus);
 }
 
 function restoreTaskView(tasklistId, taskId) {
@@ -77,12 +92,12 @@ function inputForTasklist() {
     "<input type='textfield' class = 'form-control' id='tasklistnew'><br>" +
     "</div></div>" +
     "<div class ='row'>" +
-    "<div class = 'col-sm-4'>" +
+    "<div class = 'col-sm-6'>" +
     "<span id='createTasklistButton' class = 'btn btn-danger'>" +
     "Create" +
     "</span>" +
     "</div>" +
-    "<div class = 'col-sm-3 align-self-end pull-right'>" +
+    "<div class = 'col-sm-6 align-self-end pull-right'>" +
     "<span id='cancelCreateTasklist' class= 'col-sm-6'>Cancel</span></div></div>"
   );
 }
@@ -91,8 +106,6 @@ function addTasklist() {
   $("#newtasklist")
     .html(inputForTasklist())
     .append("<br>");
-  $("#createTasklistButton").on("click", createTasklist);
-  $("#cancelCreateTasklist").on("click", restoreCreateTasklist);
 }
 
 function addTask() {
@@ -100,8 +113,6 @@ function addTask() {
     const input = inputForTask($(this).data("tasklistid"));
     $("#newtasks").show();
     $("#newtasks").append(input);
-    $(".createNewTaskButton").on("click", createTask);
-    $(".cancelNewTaskButton").on("click", restoreCreateTask);
   }
 }
 
@@ -112,14 +123,9 @@ function renderTask() {
     url: "/tasklists/" + tasklistId + "/render_tasks",
     success: function(result) {
       $("#tasks").html(result);
-      $("#addTaskButton").on("click", addTask);
-      $(".taskname").on("click", renderUpdate);
-      $(".taskUpdate").on("click", renderUpdate);
-      $(".taskDelete").on("click", deleteTask);
-      $(":checkbox").on("click", updateTaskStatus);
     }
   });
-  setSelectedTasklist(index);
+  setSelectedTasklist(tasklistId);
 }
 
 function updateTaskView(tasklistId, taskId) {
@@ -156,9 +162,6 @@ function renderUpdate() {
     $('#card'+taskId).attr("data-title",text);
     $('#card'+taskId).attr("data-status", $("#checkbox" + taskId).prop("checked"));
     $("#card" + taskId).html(updateTaskView(tasklistId, taskId));
-    $(".updateTaskSaveButton").on("click", updateTask);
-    $(".updateTaskCancelButton").on("click", restoreTask);
-    $(":checkbox").on("click", updateTaskStatus);
   }
 }
 
@@ -169,15 +172,12 @@ function createTasklist() {
     data: "name=" + $("#tasklistnew").val(),
     success: function(data) {
       $("#tasklists")
-        .append($(data).find("li")[0])
-        .append("<br>");
+        .append($(data).find("li")[0]);
       $("#newtasklist").empty();
       $("#tasklistnew").val("");
       $("#tasklists")
         .find(".tasklist_list")
         .click();
-      $(".tasklist_list").on("click", renderTask);
-      $(".tasklistUpdateButton").on("click", renderUpdateTasklist);
     }
   });
 }
@@ -194,7 +194,6 @@ function updateTasklist() {
         .append($(data).find("DIV")[1])
         .append($(data).find("DIV")[1])
         .append($(data).find("DIV")[1]);
-      $(".tasklistUpdateButton").on("click", renderUpdateTasklist);
     }
   });
 }
@@ -208,8 +207,6 @@ function createTask() {
       $(".tab-content .list-group")
         .append($(data).find("li")[0]);
       restoreCreateTask();
-      $(".taskDelete").on("click", deleteTask);
-      $(":checkbox").on("click", updateTaskStatus);
     }
   });
 }
@@ -227,10 +224,7 @@ function updateTask() {
         .append($(data).find("DIV")[3])
         .append($(data).find("DIV")[3])
         .append($(data).find("DIV")[3])
-        .append($(data).find("DIV")[3])
-        .append("<br>");
-      $(".taskname").on("click", renderUpdate);
-      $(".taskUpdate").on("click", renderUpdate);
+        .append($(data).find("DIV")[3]);
     }
   });
 }
@@ -248,25 +242,13 @@ function deleteTask() {
 }
 
 function setSelectedTasklist(selectedTasklist) {
+  var currentTasklist = localStorage.getItem("selectedTasklistCount");
+  $('#tasklist_list'+currentTasklist).parent().removeClass('active');
   localStorage.setItem("selectedTasklistCount", selectedTasklist);
+  currentTasklist = localStorage.getItem("selectedTasklistCount");
+  $('#tasklist_list'+currentTasklist).parent().addClass('active');
 }
 
-function setActiveTaskList() {
-  const storage = localStorage.getItem("selectedTasklistCount")
-  $(document).ready(function() {
-    if (storage === null) {
-      $(document)
-        .find(".tasklist_list")[0]
-        .click();
-    } else {
-      $(document)
-        .find(".tasklist_list")
-        [storage].click();
-    }
-  });
-}
-
-setActiveTaskList();
 
 function inputForUpdateTasklist(tasklistId, index) {
   return (
@@ -326,7 +308,6 @@ function restoreUpdateTasklist() {
   $("#tasklist_list" + tasklistId).html(
     restoreUpdateTasklistView(tasklistId, index)
   );
-  $(".tasklistUpdateButton").on("click", renderUpdateTasklist);
   $('#tasklist_list'+tasklistId).removeAttr("data-index");
   $('#tasklist_list'+tasklistId).removeAttr("data-name");
 }
@@ -361,6 +342,4 @@ function restoreCreateTasklist() {
 
 function restoreCreateTask() {
   $("#newtasks").empty();
-  $(".taskname").on("click", renderUpdate);
-  $(".taskUpdate").on("click", renderUpdate);
 }
