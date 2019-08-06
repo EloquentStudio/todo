@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { session: 'users/session' }
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'tasklists#index'
+
   resources :tasklists do
     member do
       get 'render_tasks'
