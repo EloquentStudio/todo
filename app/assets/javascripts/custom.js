@@ -335,17 +335,14 @@ function restoreUpdateTasklist() {
 function renderUpdateTasklist() {
   const tasklistId = $(this).data("tasklistid");
   const index = $(this).data("index");
-  $('#tasklist_list'+tasklistId).attr("data-name",$("#tasklist" + tasklistId).text());
-  $('#tasklist_list'+tasklistId).attr("data-index",index);
-
+  $("#tasklist_list"+tasklistId).attr("data-name",$("#tasklist" + tasklistId).text());
+  $("#tasklist_list"+tasklistId).attr("data-index",index);
   tasklistIndex = index;
   $("#tasklist_list" + tasklistId).html(
     inputForUpdateTasklist(tasklistId, index)
   );
   $(".saveUpdateTasklistButton").bind("click", updateTasklist);
   $(".cancelUpdateTasklistButton").bind("click", restoreUpdateTasklist);
-  $('#tasklist_list'+tasklistId).removeAttr("data-index");
-  $('#tasklist_list'+tasklistId).removeAttr("data-name");
 }
 
 function updateTaskStatus() {
