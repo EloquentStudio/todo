@@ -17,15 +17,12 @@ function inputForTask(tasklistId) {
   );
 }
 
-var taskNamePartial = [];
-var taskChecked = [];
-
 function restoreTask() {
-  tasklistId = $(this).data("tasklistid");
-  taskId = $(this).data("taskid");
+  const tasklistId = $(this).data("tasklistid");
+  const taskId = $(this).data("taskid");
   $("#card" + taskId).empty();
   $("#card" + taskId).append(restoreTaskView(tasklistId, taskId));
-  if (taskChecked[taskId] == true) {
+  if ($('#card'+taskId).data("status") == true) {
     $("#checkbox" + taskId).attr("checked", "checked");
   }
   $(".taskname").on("click", renderUpdate);
@@ -52,7 +49,7 @@ function restoreTaskView(tasklistId, taskId) {
     " data-taskid = " +
     taskId +
     ">" +
-    taskNamePartial[taskId] +
+    $('#card'+taskId).data("title") +
     "</div>" +
     "</div>" +
     "<div class = 'col-sm-1 align-self-center'>" +
@@ -100,7 +97,7 @@ function addTasklist() {
 
 function addTask() {
   if ($("#newTask").length == 0) {
-    var input = inputForTask($(this).data("tasklistid"));
+    const input = inputForTask($(this).data("tasklistid"));
     $("#newtasks").show();
     $("#newtasks").append(input);
     $(".createNewTaskButton").on("click", createTask);
@@ -109,8 +106,8 @@ function addTask() {
 }
 
 function renderTask() {
-  tasklistId = $(this).data("tasklistid");
-  index = $(this).data("index");
+  const tasklistId = $(this).data("tasklistid");
+  const index = $(this).data("index");
   $.ajax({
     url: "/tasklists/" + tasklistId + "/render_tasks",
     success: function(result) {
@@ -124,8 +121,9 @@ function renderTask() {
   });
   setSelectedTasklist(index);
 }
+
 function updateTaskView(tasklistId, taskId) {
-  var text = $("#task" + taskId).text();
+  const text = $("#task" + taskId).text();
   return (
     "<div class = 'col-sm-12' >" +
     "<input class = 'form-control' type='textfield' id='inputTask" +
@@ -148,21 +146,22 @@ function updateTaskView(tasklistId, taskId) {
   );
 }
 function renderUpdate() {
-  tasklistId = $(this).data("tasklistid");
-  taskId = $(this).data("taskid");
+  const tasklistId = $(this).data("tasklistid");
+  const taskId = $(this).data("taskid");
   if (
     $("#task" + taskId).prop("tagName") == "DIV" &&
     $("#task" + taskId).find($("#inputTask" + taskId)).length == 0
   ) {
-    var text = $("#task" + taskId).text();
-    taskNamePartial[taskId] = text;
-    taskChecked[taskId] = $("#checkbox" + taskId).prop("checked");
+    const text = $("#task" + taskId).text();
+    $('#card'+taskId).attr("data-title",text);
+    $('#card'+taskId).attr("data-status", $("#checkbox" + taskId).prop("checked"));
     $("#card" + taskId).html(updateTaskView(tasklistId, taskId));
     $(".updateTaskSaveButton").on("click", updateTask);
     $(".updateTaskCancelButton").on("click", restoreTask);
     $(":checkbox").on("click", updateTaskStatus);
   }
 }
+
 function createTasklist() {
   Rails.ajax({
     type: "post",
@@ -184,7 +183,7 @@ function createTasklist() {
 }
 
 function updateTasklist() {
-  tasklistId = $(this).data("tasklistid");
+  const tasklistId = $(this).data("tasklistid");
   Rails.ajax({
     type: "put",
     url: "/tasklists/" + tasklistId + "/",
@@ -200,7 +199,7 @@ function updateTasklist() {
   });
 }
 function createTask() {
-  tasklistId = $(this).data("tasklistid");
+  const tasklistId = $(this).data("tasklistid");
   Rails.ajax({
     type: "post",
     url: "tasklists/" + tasklistId + "/tasks/",
@@ -216,8 +215,8 @@ function createTask() {
 }
 
 function updateTask() {
-  tasklistId = $(this).data("tasklistid");
-  taskId = $(this).data("taskid");
+  const tasklistId = $(this).data("tasklistid");
+  const taskId = $(this).data("taskid");
   Rails.ajax({
     type: "put",
     url: "tasklists/" + tasklistId + "/tasks/" + taskId,
@@ -236,9 +235,9 @@ function updateTask() {
   });
 }
 
-function deleteTask(tasklistId, taskId) {
-  tasklistId = $(this).data("tasklistid");
-  taskId = $(this).data("taskid");
+function deleteTask() {
+  const tasklistId = $(this).data("tasklistid");
+  const taskId = $(this).data("taskid");
   Rails.ajax({
     type: "delete",
     url: "tasklists/" + tasklistId + "/tasks/" + taskId,
@@ -253,7 +252,7 @@ function setSelectedTasklist(selectedTasklist) {
 }
 
 function setActiveTaskList() {
-  var storage = localStorage.getItem("selectedTasklistCount")
+  const storage = localStorage.getItem("selectedTasklistCount")
   $(document).ready(function() {
     if (storage === null) {
       $(document)
@@ -303,7 +302,7 @@ function restoreUpdateTasklistView(tasklistId, index) {
     " data-index = " +
     index +
     ">" +
-    tasklistNamePartial[tasklistId] +
+    $('#tasklist_list'+tasklistId).data("name") +
     "</div>" +
     "</div>" +
     "<div class = 'col-sm-1'>" +
@@ -322,32 +321,36 @@ function restoreUpdateTasklistView(tasklistId, index) {
 }
 
 function restoreUpdateTasklist() {
-  tasklistId = $(this).data("tasklistid");
-  index = $(this).data("index");
+  const tasklistId = $(this).data("tasklistid");
+  const index = $(this).data("index");
   $("#tasklist_list" + tasklistId).html(
     restoreUpdateTasklistView(tasklistId, index)
   );
   $(".tasklistUpdateButton").on("click", renderUpdateTasklist);
+  $('#tasklist_list'+tasklistId).removeAttr("data-index");
+  $('#tasklist_list'+tasklistId).removeAttr("data-name");
 }
 
-var tasklistNamePartial = [];
-var tasklistIndex = [];
 
 function renderUpdateTasklist() {
-  tasklistId = $(this).data("tasklistid");
-  index = $(this).data("index");
-  tasklistNamePartial[tasklistId] = $("#tasklist" + tasklistId).text();
+  const tasklistId = $(this).data("tasklistid");
+  const index = $(this).data("index");
+  $('#tasklist_list'+tasklistId).attr("data-name",$("#tasklist" + tasklistId).text());
+  $('#tasklist_list'+tasklistId).attr("data-index",index);
+
   tasklistIndex = index;
   $("#tasklist_list" + tasklistId).html(
     inputForUpdateTasklist(tasklistId, index)
   );
   $(".saveUpdateTasklistButton").bind("click", updateTasklist);
   $(".cancelUpdateTasklistButton").bind("click", restoreUpdateTasklist);
+  $('#tasklist_list'+tasklistId).removeAttr("data-index");
+  $('#tasklist_list'+tasklistId).removeAttr("data-name");
 }
 
 function updateTaskStatus() {
-  tasklistId = $(this).data("tasklistid");
-  taskId = $(this).data("taskid");
+  const tasklistId = $(this).data("tasklistid");
+  const taskId = $(this).data("taskid");
   Rails.ajax({
     url: "/tasklists/" + tasklistId + "/tasks/" + taskId + "/toggle_status",
     type: "patch",

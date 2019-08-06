@@ -6,14 +6,14 @@
           .col-sm-12
             .row{id: "card#{task.id}"}
               .col-sm-1.align-self-center
-                %input{type: 'checkbox', id: "checkbox#{task.id}", "data-tasklistid": params[:id], "data-taskid": task.id, "checked": task.status}
+                %input{type: 'checkbox', id: "checkbox#{task.id}", "data-tasklistid": task.tasklist.id, "data-taskid": task.id, "checked": task.status}
               .col-sm-8.align-self-center
-                %div.taskname{id:"task#{task.id}", "data-tasklistid": params[:id], "data-taskid": task.id}
+                %div.taskname{id:"task#{task.id}", "data-tasklistid": task.tasklist.id, "data-taskid": task.id}
                   =task.name
               .col-sm-1.align-self-center
-                %span.fa.fa-edit#taskUpdate.taskUpdate{"data-tasklistid": params[:id], "data-taskid": task.id}
+                %span.fa.fa-edit#taskUpdate.taskUpdate{"data-tasklistid": task.tasklist.id, "data-taskid": task.id}
               .col-sm-1.align-self-center
-                %span.far.fa-trash-alt#taskDelete.taskDelete{"data-tasklistid": params[:id], "data-taskid": task.id}
+                %span.far.fa-trash-alt#taskDelete.taskDelete{"data-tasklistid": task.tasklist.id, "data-taskid": task.id}
 %br
 %ul.list-group
   .row
@@ -21,4 +21,4 @@
   %li.list-group-item
     .row
       %br
-      %button.btn.btn-primary#addTaskButton{"data-tasklistid": params[:id]} Add Task
+      %button.btn.btn-primary#addTaskButton{"data-tasklistid": @tasks.first.tasklist.id} Add Task
