@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   resources :tasklists do
     member do
-      get 'render_tasks'
+      get 'get_tasks'
     end
     resources :tasks do
       member do

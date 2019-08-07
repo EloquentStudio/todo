@@ -18,3 +18,4 @@
 //= require bootstrap
 //= require custom.js
 //= require toastr
+//= require mustache/mustache.js

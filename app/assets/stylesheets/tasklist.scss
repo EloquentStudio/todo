@@ -1,45 +1,43 @@
 // Place all the styles related to the tasklist controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-@import 'bootstrap';
+@import "bootstrap";
 
-.tasklistname:hover{
-cursor: pointer;
-#delete{
-  visibility: visible
+.tasklistname:hover {
+  cursor: pointer;
+  #delete {
+    visibility: visible;
+  }
+
+  #update {
+    visibility: visible;
+  }
 }
 
-#update{
-  visibility: visible;
-}
-
-}
-
-#update, #taskUpdate
-{
+#update,
+#taskUpdate {
   color: #93922a;
   visibility: hidden;
 }
 
-#delete, #taskDelete
-{
-  color:#AD423F  ;
+#delete,
+#taskDelete {
+  color: #ad423f;
   visibility: hidden;
 }
 
+.tab-content li:hover {
+  #taskDelete {
+    visibility: visible;
+  }
 
-.tab-content li:hover{
-#taskDelete{
-  visibility: visible;
+  #taskUpdate {
+    visibility: visible;
+  }
 }
 
-#taskUpdate{
-  visibility: visible;
-}
-}
-
-checkbox:checked{
-.card-body{
-background-color: grey;
-}
+checkbox:checked {
+  .card-body {
+    background-color: grey;
+  }
 }

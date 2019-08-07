@@ -1,5 +1,7 @@
 {
   "name": "todo",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "mustache": "^3.0.1"
+  }
 }

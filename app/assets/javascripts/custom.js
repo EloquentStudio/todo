@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  const storage = localStorage.getItem("selectedTasklistCount");
+  const selectedTasklist = localStorage.getItem("selectedTasklistCount");
   $("#newTasklistButton").on("click", addTasklist);
   $(".tasklist_list").on("click", renderTask);
   $("#tasklists").on("click", ".tasklist_list" ,renderTask);
@@ -16,24 +16,24 @@ $(document).ready(function() {
   $("#tasks").on("click", ".taskDelete", deleteTask);
   $("#tasks").on("click", ".updateTaskSaveButton", updateTask);
   $("#tasks").on("click", ".updateTaskCancelButton", restoreTask);
-  if (storage === null) {
+  $("#tasklists").on("click", ".saveUpdateTasklistButton" ,updateTasklist);
+  $("#tasklists").on("click", ".cancelUpdateTasklistButton" ,restoreUpdateTasklist);
+  if (selectedTasklist === null) {
   } else {
     $(document)
-      .find("#tasklist" + storage)
+      .find("#tasklist" + selectedTasklist)
       .click();
-    setSelectedTasklist(storage);
+    setSelectedTasklist(selectedTasklist);
   }
 });
 
-function inputForTask(tasklistId) {
+function inputForTask() {
   return (
     "<li class = 'list-group-item'>" +
     "<div class = 'row'>" +
     "<div class = 'col-sm-12'>" +
     "<input type= 'textfield' class='form-control' id=newTask><br></div>" +
-    "<div class = 'col-sm-2 pull-right'><button class='createNewTaskButton btn btn-danger' data-tasklistid = " +
-    tasklistId +
-    ">Save</button></div>" +
+    "<div class = 'col-sm-2 pull-right'><button class='createNewTaskButton btn btn-danger' data-tasklistid = {{tasklistId}}>Save</button></div>" +
     "<div class = 'col-sm-3 align-self-end'><div class = 'cancelNewTaskButton'>Cancel</div></div></div></li>"
   );
 }
@@ -41,48 +41,31 @@ function inputForTask(tasklistId) {
 function restoreTask() {
   const tasklistId = $(this).data("tasklistid");
   const taskId = $(this).data("taskid");
+  const title = $("#card" + taskId).data("title");
   $("#card" + taskId).empty();
-  $("#card" + taskId).append(restoreTaskView(tasklistId, taskId));
+  $("#card" + taskId).append(Mustache.render(taskView(),{tasklistId: tasklistId, taskId: taskId,title: title}));
   if ($("#card" + taskId).data("status") == true) {
     $("#checkbox" + taskId).attr("checked", "checked");
   }
 }
 
-function restoreTaskView(tasklistId, taskId) {
+function taskView() {
   return (
     "<div class = 'col-sm-1 align-self-center'>" +
-    "<input id='checkbox" +
-    taskId +
-    "' type = 'checkbox' data-tasklistid = " +
-    tasklistId +
-    " data-taskid = " +
-    taskId +
-    ">" +
+    "<input id='checkbox{{taskId}}' type = 'checkbox' data-tasklistid = " +
+    "{{tasklistId}} data-taskid = {{taskId}}>"+
     "</div>" +
     "<div class = 'col-sm-8 align-self-center'>" +
-    "<div class = 'taskname' id ='task" +
-    taskId +
-    "' data-tasklistid = " +
-    tasklistId +
-    " data-taskid = " +
-    taskId +
-    ">" +
-    $("#card" + taskId).data("title") +
-    "</div>" +
+    "<div class = 'taskname' id ='task{{taskId}}' data-tasklistid = " +
+    "{{tasklistId}} data-taskid = {{taskId}}>{{title}}</div>" +
     "</div>" +
     "<div class = 'col-sm-1 align-self-center'>" +
     "<span class = 'fa fa-edit taskUpdate' id = 'taskUpdate' data-tasklistid = " +
-    tasklistId +
-    " data-taskid = " +
-    taskId +
-    ">" +
+    "{{tasklistId}} data-taskid = {{taskId}}>" +
     "</div>" +
     "<div class = 'col-sm-1 align-self-center'>" +
     "<span class = 'far fa-trash-alt taskDelete' data-tasklistid = " +
-    tasklistId +
-    " data-taskid = " +
-    taskId +
-    " id = 'taskDelete'>" +
+    "{{tasklistId}} data-taskid = {{taskId}} id = 'taskDelete'>" +
     "</div>"
   );
 }
@@ -106,14 +89,12 @@ function inputForTasklist() {
 }
 
 function addTasklist() {
-  $("#newtasklist")
-    .html(inputForTasklist())
-    .append("<br>");
+  $("#newtasklist").html(Mustache.render(inputForTasklist()));
 }
 
 function addTask() {
   if ($("#newTask").length == 0) {
-    const input = inputForTask($(this).data("tasklistid"));
+    const input = Mustache.render(inputForTask(),{tasklistId: $(this).data("tasklistid")});
     $("#newtasks").show();
     $("#newtasks").append(input);
   }
@@ -123,7 +104,7 @@ function renderTask() {
   const tasklistId = $(this).data("tasklistid");
   const index = $(this).data("index");
   $.ajax({
-    url: "/tasklists/" + tasklistId + "/render_tasks",
+    url: "/tasklists/" + tasklistId + "/get_tasks",
     success: function(result) {
       $("#tasks").html(result);
     }
@@ -131,27 +112,17 @@ function renderTask() {
   setSelectedTasklist(tasklistId);
 }
 
-function updateTaskView(tasklistId, taskId) {
-  const text = $("#task" + taskId).text();
+function updateTaskView() {
   return (
     "<div class = 'col-sm-12' >" +
-    "<input class = 'form-control' type='textfield' id='inputTask" +
-    taskId +
-    "' value='" +
-    text +
-    "'><br></div>" +
+    "<input class = 'form-control' type='textfield' id='inputTask{{taskId}}' value='" +
+    "{{text}}'><br></div>" +
     "<div class= 'col-sm-2'> " +
     "<button class='btn btn-danger updateTaskSaveButton' data-tasklistid = " +
-    tasklistId +
-    " data-taskid = " +
-    taskId +
-    "> Save </button></div>" +
+    "{{tasklistId}} data-taskid = {{taskId}}> Save </button></div>" +
     "<div class = 'col-sm-2 align-self-end'>" +
     "<a class = 'updateTaskCancelButton' data-tasklistid = " +
-    tasklistId +
-    " data-taskid = " +
-    taskId +
-    ">Cancel</a></div>"
+    "{{tasklistId}} data-taskid = {{taskId}}>Cancel</a></div>"
   );
 }
 function renderUpdate() {
@@ -167,7 +138,7 @@ function renderUpdate() {
       "data-status",
       $("#checkbox" + taskId).prop("checked")
     );
-    $("#card" + taskId).html(updateTaskView(tasklistId, taskId));
+    $("#card" + taskId).html(Mustache.render(updateTaskView(),{tasklistId: tasklistId, taskId: taskId,text: text}));
   }
 }
 
@@ -177,16 +148,8 @@ function createTasklist() {
     url: "/tasklists",
     data: "name=" + $("#tasklistnew").val(),
     success: function(data) {
-      $("#tasklists").append($(data).find("li")[0]);
-      $("#newtasklist").empty();
-      $("#tasklistnew").val("");
-      $("#tasklists")
-        .find(".tasklist_list")
-        .click();
     },
     error: function(data) {
-      const json = JSON.parse(JSON.stringify(data));
-      toastr.error(json);
     }
   });
 }
@@ -198,15 +161,8 @@ function updateTasklist() {
     url: "/tasklists/" + tasklistId + "/",
     data: "name=" + $("#updateTasklistInput" + tasklistId).val(),
     success: function(data) {
-      $("#tasklist_list" + tasklistId).empty();
-      $("#tasklist_list" + tasklistId)
-        .append($(data).find("DIV")[1])
-        .append($(data).find("DIV")[1])
-        .append($(data).find("DIV")[1]);
     },
     error: function(data) {
-      const json = JSON.parse(JSON.stringify(data));
-      toastr.error(json);
     }
   });
 }
@@ -217,12 +173,9 @@ function createTask() {
     url: "tasklists/" + tasklistId + "/tasks/",
     data: "name=" + $("#newTask").val(),
     success: function(data) {
-      $(".tab-content .list-group").append($(data).find("li")[0]);
-      restoreCreateTask();
     },
     error: function(data) {
-      const json = JSON.parse(JSON.stringify(data));
-      toastr.error(json);
+
     }
   });
 }
@@ -235,16 +188,8 @@ function updateTask() {
     url: "tasklists/" + tasklistId + "/tasks/" + taskId,
     data: "name=" + $("#inputTask" + taskId).val(),
     success: function(data) {
-      $("#card" + taskId).empty();
-      $("#card" + taskId)
-        .append($(data).find("DIV")[3])
-        .append($(data).find("DIV")[3])
-        .append($(data).find("DIV")[3])
-        .append($(data).find("DIV")[3]);
     },
     error: function(data) {
-      const json = JSON.parse(JSON.stringify(data));
-      toastr.error(json);
     }
   });
 }
@@ -273,53 +218,36 @@ function setSelectedTasklist(selectedTasklist) {
     .addClass("active");
 }
 
-function inputForUpdateTasklist(tasklistId, index) {
+function inputForUpdateTasklist() {
   return (
     "<div class='row'>" +
     "<div class='col-sm-12'>" +
-    "<input type='textfield' class='form-control' id='updateTasklistInput" +
-    tasklistId +
-    "' value='" +
-    $("#tasklist" + tasklistId).text() +
-    "'><br></div></div><div class='row align-middle'>" +
+    "<input type='textfield' class='form-control' id='updateTasklistInput{{tasklistId}}' value='" +
+     "{{title}}'><br></div></div><div class='row align-middle'>" +
     "<div class='col-sm-4'>" +
-    "<span class ='btn btn-danger saveUpdateTasklistButton' data-tasklistid = " +
-    tasklistId +
-    "> Save" +
+    "<span class ='btn btn-danger saveUpdateTasklistButton' data-tasklistid = {{tasklistId}}> Save" +
     "</span></div>" +
     "<div class='col-sm-3 align-self-end'>" +
     "<span class = 'col-sm-6 cancelUpdateTasklistButton' data-tasklistid = " +
-    tasklistId +
-    " data-index = " +
-    index +
-    ">Cancel</span>" +
+    "{{tasklistId}} data-index = {{index}} >Cancel</span>" +
     "</div></div>"
   );
 }
 
-function restoreUpdateTasklistView(tasklistId, index) {
+function restoreUpdateTasklistView() {
+
   return (
     "<div class = 'col-sm-6'>" +
-    "<div class = 'tasklist_list' id='tasklist" +
-    tasklistId +
-    "' data-tasklistid = " +
-    tasklistId +
-    " data-index = " +
-    index +
-    ">" +
-    $("#tasklist_list" + tasklistId).data("name") +
+    "<div class = 'tasklist_list' id='tasklist{{tasklistId}}' data-tasklistid = " +
+    "{{tasklistId}}  data-index = {{index}}>{{title}}"+
     "</div>" +
     "</div>" +
     "<div class = 'col-sm-1'>" +
     "<div class= 'fa fa-edit pull-right tasklistUpdateButton' id ='update' data-tasklistid = " +
-    tasklistId +
-    " data-index = " +
-    index +
-    ")'></div> " +
+    "{{tasklistId}} data-index = {{index}})'></div> " +
     "</div>" +
     "<div class = 'col-sm-1'>" +
-    "<div class= 'fa fa-trash-alt pull-right' id ='delete' data-method = 'delete' href='/tasklists/'" +
-    tasklistId +
+    "<div class= 'fa fa-trash-alt pull-right' id ='delete' data-method = 'delete' href='/tasklists/'{{tasklistId}}" +
     ")></div> " +
     "</div>"
   );
@@ -328,9 +256,10 @@ function restoreUpdateTasklistView(tasklistId, index) {
 function restoreUpdateTasklist() {
   const tasklistId = $(this).data("tasklistid");
   const index = $(this).data("index");
+  const title = $("#tasklist_list" + tasklistId).data("name");
   $("#tasklist_list" + tasklistId).html(
-    restoreUpdateTasklistView(tasklistId, index)
-  );
+    Mustache.render(restoreUpdateTasklistView(tasklistId, index),
+    {tasklistId: tasklistId, index: index, title:title}));
   $("#tasklist_list" + tasklistId).removeAttr("data-index");
   $("#tasklist_list" + tasklistId).removeAttr("data-name");
 }
@@ -338,17 +267,13 @@ function restoreUpdateTasklist() {
 function renderUpdateTasklist() {
   const tasklistId = $(this).data("tasklistid");
   const index = $(this).data("index");
-  $("#tasklist_list" + tasklistId).attr(
-    "data-name",
-    $("#tasklist" + tasklistId).text()
-  );
-  $("#tasklist_list" + tasklistId).attr("data-index", index);
+  const title = $("#tasklist" + tasklistId).text();
   tasklistIndex = index;
+  $("#tasklist_list" + tasklistId).attr("data-name",$("#tasklist" + tasklistId).text());
+  $("#tasklist_list" + tasklistId).attr("data-index", index);
   $("#tasklist_list" + tasklistId).html(
-    inputForUpdateTasklist(tasklistId, index)
-  );
-  $(".saveUpdateTasklistButton").bind("click", updateTasklist);
-  $(".cancelUpdateTasklistButton").bind("click", restoreUpdateTasklist);
+    Mustache.render(inputForUpdateTasklist(),
+    {tasklistId: tasklistId, index: index, title: title}));
 }
 
 function updateTaskStatus() {

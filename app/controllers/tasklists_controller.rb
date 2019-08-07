@@ -11,21 +11,21 @@ class TasklistsController < ApplicationController
   def create
     @tasklist = current_user.tasklists.build(tasklist_params)
     if @tasklist.save
-      render partial: 'tasklist'
+      render :create_tasklist
     else
-      render json: @tasklist.errors.full_messages, status: 422
+      render :errors
     end
   end
 
   def update
     if @tasklist.update(tasklist_params)
-      render partial: 'tasklist'
+      render :update_tasklist
     else
-      render json: @tasklist.errors.full_messages, status: 422
+      render :errors
     end
   end
 
-  def render_tasks
+  def get_tasks
     @tasks = @tasklist.tasks
     render partial: 'tasks'
   end

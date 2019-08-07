@@ -10,17 +10,17 @@ class TasksController < ApplicationController
   def create
     @task = @tasklist.tasks.build(tasklist_params)
     if @task.save
-      render partial: 'task'
+      render :create_task
     else
-      render json: @task.errors.full_messages, status: 422
+      render :errors
     end
   end
 
   def update
     if @task.update(tasklist_params)
-      render partial: 'task'
+      render :update_task
     else
-      render json: @task.errors.full_messages, status: 422
+      render :errors
     end
   end
 

@@ -46,6 +46,7 @@ gem 'hirb'
 gem 'jquery-rails'
 gem 'rubocop-rails', '~> 2.2', '>= 2.2.1'
 gem 'toastr-rails', '~> 1.0', '>= 1.0.3'
+gem "mustache", "~> 1.0"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
