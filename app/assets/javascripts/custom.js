@@ -234,8 +234,7 @@ function inputForUpdateTasklist() {
   );
 }
 
-function restoreUpdateTasklistView() {
-
+function renderTasklistEditView() {
   return (
     "<div class = 'col-sm-6'>" +
     "<div class = 'tasklist_list' id='tasklist{{tasklistId}}' data-tasklistid = " +
@@ -258,7 +257,7 @@ function restoreUpdateTasklist() {
   const index = $(this).data("index");
   const title = $("#tasklist_list" + tasklistId).data("name");
   $("#tasklist_list" + tasklistId).html(
-    Mustache.render(restoreUpdateTasklistView(tasklistId, index),
+    Mustache.render(renderTasklistEditView(tasklistId, index),
     {tasklistId: tasklistId, index: index, title:title}));
   $("#tasklist_list" + tasklistId).removeAttr("data-index");
   $("#tasklist_list" + tasklistId).removeAttr("data-name");

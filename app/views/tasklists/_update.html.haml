@@ -5,3 +5,4 @@
   %a.fa.fa-edit.pull-right.tasklistUpdateButton{"data-index": current_user.tasklists.count - 1, "data-tasklistid": @tasklist.id, id: "update"}
 .col-sm-1
   =link_to '', tasklist_path(@tasklist.id),method: 'delete', class: "pull-right fa fa-trash-alt" ,id: "delete"
+
