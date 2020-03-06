@@ -1,14 +1,32 @@
-%h2 Hello #{current_user.email}
+%nav.navbar.navbar-light.bg-warning
+  .container-fluid
+    .navbar-header
+      %a.navbar-brand{href:"#"} Todo List
+    %ul.nav.nav-pills
+      %li.nav-item
+        -if user_signed_in?
+          =link_to 'Sign out', destroy_user_session_path, method: 'delete', class:"nav-link"
 %br
-- if @tasklist.length
-  %h3 You have #{@tasklist.length} tasklist
-  -@tasklist.each do |tasklist|
-    =link_to tasklist.name, tasklist_tasks_path(tasklist.id)
-    %br
-
-  %br
-
-=link_to 'Create new tasklist', new_tasklist_path
-
-%br
-=link_to 'Sign Out',destroy_user_session_path,method: :delete if user_signed_in?
+.container
+  .row
+    .col-sm-2
+      %ul.list-group.list-group-flush
+        %li.list-group-item
+          Task lists
+          %a-#newTasklistButton.float-right.fa.fa-plus
+        %li.list-group-item
+          #newtasklist
+        #tasklists
+          -@tasklists.each_with_index do |tasklist,index|
+            %li.list-group-item
+              .row.align-middle.tasklistname{id: "tasklist_list#{tasklist.id}"}
+                .col-sm-7
+                  .tasklist_list{"data-tasklistid": tasklist.id, "data-index": index, id:"tasklist#{tasklist.id}"} #{tasklist.name}
+                .col-sm-1
+                  %a.fa.fa-edit.pull-right.tasklistUpdateButton{"data-tasklistid": tasklist.id, "data-index": index, id: 'update'}
+                .col-sm-1
+                  =link_to '', tasklist_path(tasklist.id),method: 'delete', class: "pull-right fa fa-trash-alt" ,id: "delete"
+    .col-sm-1
+    .col-sm-8
+      .row
+        #tasks{style:"width:90%"}

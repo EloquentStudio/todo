@@ -3,50 +3,33 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_tasklist
+  before_action :set_task, except: :create
 
-  def index
-    @tasks = @tasklist.tasks
-  end
-
-  def new
-    @tasks = @tasklist.tasks.build
-  end
+  def index; end
 
   def create
-    @tasks = @tasklist.tasks.new(permit_params)
-    if @tasks.save
-      redirect_to tasklist_tasks_path
+    @task = @tasklist.tasks.build(tasklist_params)
+    if @task.save
+      render :create_task
     else
-      render 'new'
+      render :errors
     end
   end
 
-  def show
-    @tasks = @tasklist.tasks.find(params[:id])
-  end
-
-  def edit
-    @tasks = @tasklist.tasks.find(params[:id])
-  end
-
   def update
-    @tasks = @tasklist.tasks.find(params[:id])
-    if @tasks.update(permit_params)
-      redirect_to tasklist_tasks_path(@tasks.tasklist_id)
+    if @task.update(tasklist_params)
+      render :update_task
     else
-      render 'edit'
+      render :errors
     end
   end
 
   def destroy
-    @tasks = @tasklist.tasks.find(params[:id])
-    @tasks.destroy
-    redirect_to tasklist_tasks_path(@tasks.tasklist_id)
+    @task.destroy
   end
 
-  def checkbox_update
-    task = @tasklist.tasks.find(params[:id])
-    task.update!(status: !task.status)
+  def toggle_status
+    @task.update!(status: !@task.status)
   end
 
   private
@@ -55,7 +38,15 @@ class TasksController < ApplicationController
     params[:task].permit(:name, :body, :status, :tasklist_id)
   end
 
+  def tasklist_params
+    params.permit(:tasklist_id, :name)
+  end
+
   def set_tasklist
     @tasklist = current_user.tasklists.find(params[:tasklist_id])
+  end
+
+  def set_task
+    @task = @tasklist.tasks.find(params[:id])
   end
 end

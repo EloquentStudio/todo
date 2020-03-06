@@ -13,8 +13,9 @@
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
-//= require_tree .
 //= require jquery
-function ajaxcall(tasklist_id,id){
-  $.ajax({url: location.origin+"/updatecheck/"+tasklist_id+"/"+id,success: function(result){console.log(result);}})
-}
+//= require popper
+//= require bootstrap
+//= require custom.js
+//= require toastr
+//= require mustache/mustache.js

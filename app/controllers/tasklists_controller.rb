@@ -2,33 +2,46 @@
 
 class TasklistsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_tasklist, except: %i[index create]
 
   def index
-    @tasklist = current_user.tasklists
-    redirect_to new_tasklist_path if @tasklist.count.zero?
-  end
-
-  def new
-    @tasklist = current_user.tasklists.build
+    @tasklists = current_user.tasklists
   end
 
   def create
     @tasklist = current_user.tasklists.build(tasklist_params)
     if @tasklist.save
-      redirect_to tasklists_path
+      render :create_tasklist
     else
-      render 'new'
+      render :errors
     end
   end
 
-  def show
-    @tasklist = current_user.tasklists.find(params[:id])
+  def update
+    if @tasklist.update(tasklist_params)
+      render :update_tasklist
+    else
+      render :errors
+    end
+  end
+
+  def get_tasks
+    @tasks = @tasklist.tasks
+    render partial: 'tasks'
+  end
+
+  def destroy
+    @tasklist.destroy
+    redirect_to root_path
   end
 
   private
 
   def tasklist_params
-    print params.inspect
-    params[:tasklist].permit(:name)
+    params.permit(:name)
+  end
+
+  def set_tasklist
+    @tasklist = current_user.tasklists.find(params[:id])
   end
 end
